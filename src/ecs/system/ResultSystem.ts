@@ -1,4 +1,4 @@
-import { HeadComponent } from "../component/HeadComponent";
+import HeadComponent from "../component/HeadComponent";
 import PositionComponent from "../component/PositionComponent";
 import { UpdateSystem } from "./UpdateSystem";
 import { zUtils } from "../../utils";
