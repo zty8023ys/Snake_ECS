@@ -13,6 +13,9 @@ import InputComponent from "./ecs/component/InputComponent";
 import HeadComponent from "./ecs/component/HeadComponent";
 
 import { zUtils } from "./utils";
+import { RenderSystem } from "./ecs/system/RenderSystem";
+import SnakeEntity from "./ecs/entity/SnakeEntity";
+import RenderComponent from "./ecs/component/RenderComponent";
 
 export class Main {
     private mainLoopInterval: number = -1;
@@ -20,7 +23,6 @@ export class Main {
     private updateSystem: UpdateSystem[] = [];
     private allSystem: BaseSystem[] = [];
     private entities: { [id: number]: BaseEntity } = {};
-    private movementSystem: MovementSystem = null;
 
     constructor() {
         this.init();
@@ -58,24 +60,26 @@ export class Main {
     }
     init() {
         this.addSystem(InputSystem);
-        this.movementSystem = this.addSystem(MovementSystem);
+        this.addSystem(MovementSystem);
         this.addSystem(VelocitySystem);
+        this.addSystem(RenderSystem);
         this.addSystem(ResultSystem);
 
         const head = this.getBaseEntity();
-        head.addComponent(HeadComponent);
-        head.addComponent(PositionComponent).init({ x: 1, y: 0 });
-        head.addComponent(LinkedComponent);
-        head.addComponent(InputComponent);
-        head.addComponent(VelocityComponent);
         LinkedComponent.Head = head;
         LinkedComponent.Tail = head;
+        head.addComponent(PositionComponent).moveTo({ x: 10, y: 11 });
+        head.addComponent(LinkedComponent)
+        head.addComponent(RenderComponent);
+
+        head.addComponent(HeadComponent);
+        head.addComponent(InputComponent);
+        head.addComponent(VelocityComponent);
+
         this.regesteEntity(head);
 
         zUtils.repeat(5, () => {
-            const body = this.getBaseEntity();
-            body.addComponent(PositionComponent);
-            body.addComponent(LinkedComponent).init();
+            const body = this.getEntity(SnakeEntity);
             this.regesteEntity(body);
         });
 
@@ -88,10 +92,10 @@ export class Main {
             updateSystem.update();
         })
 
-        this.movementSystem.entities.forEach(entity => {
-            console.log(entity.getComponent(PositionComponent).position)
-        })
-        console.log("===========")
+        // this.movementSystem.entities.forEach(entity => {
+        //     console.log(entity.getComponent(PositionComponent).position)
+        // })
+        // console.log("===========")
     }
     gameEnd() {
         clearInterval(this.mainLoopInterval);

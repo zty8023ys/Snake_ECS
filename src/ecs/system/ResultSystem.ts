@@ -10,8 +10,12 @@ export class ResultSystem extends UpdateSystem {
     update() {
         const entity = this.entities[0];
         if (this.checkGameEnd(entity.getComponent(PositionComponent).position)) {
-            (this.context as Main).gameEnd();
+            this.gameEnd();
         }
+    }
+
+    gameEnd() {
+        (this.context as Main).gameEnd();
     }
 
     checkGameEnd({ x, y }: { x: number, y: number }): boolean {

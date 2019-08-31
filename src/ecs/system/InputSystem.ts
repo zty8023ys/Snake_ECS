@@ -8,13 +8,14 @@ export class InputSystem extends UpdateSystem {
     watchComponents = [InputComponent, PositionComponent, VelocityComponent];
     update() {
         // this.onInput(Direction.UP);
-        this.onInput(zUtils.fairlyRandom(
-            Direction.UP,
-            Direction.DOWN,
-            Direction.LEFT,
-            Direction.RIGHT,
-            Direction.STOP
-        )
+        this.onInput(
+            zUtils.fairlyRandom(
+                Direction.UP,
+                Direction.DOWN,
+                Direction.LEFT,
+                Direction.RIGHT,
+                Direction.STOP
+            )
         )
     }
     onInput(direction: Direction) {
@@ -23,6 +24,8 @@ export class InputSystem extends UpdateSystem {
         const inputComponent = inputEntity.getComponent(InputComponent);
         if (!inputComponent.isVaildInput(direction)) return;
         inputComponent.direction = direction;
+        if (direction === Direction.STOP) return;
+
         let velocity: {
             x: -1 | 0 | 1,
             y: -1 | 0 | 1

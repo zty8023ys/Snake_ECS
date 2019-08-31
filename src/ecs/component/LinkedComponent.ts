@@ -6,15 +6,17 @@ export default class LinkedComponent extends BaseComponent {
     public static Tail: BaseEntity = null;
     public next: BaseEntity = null;
     public prev: BaseEntity = null;
-    init(pre: BaseEntity = LinkedComponent.Tail) {
-        zUtils.assert(this.prev === null);
-        zUtils.assert(pre.getComponent(LinkedComponent).next === null);
-        zUtils.assert(this.entity.getId() !== pre.getId());
-        if (!this.next) {
-            LinkedComponent.Tail = this.entity;
-        }
-        pre.getComponent(LinkedComponent).next = this.entity;
-        this.prev = pre;
+    init() {
+        const tail: BaseEntity = LinkedComponent.Tail;
+        this.test(tail);
+        tail.getComponent(LinkedComponent).next = this.entity;
+        this.prev = tail;
+        LinkedComponent.Tail = this.entity;
         return this.entity;
+    }
+    test(tail: BaseEntity) {
+        zUtils.assert(this.prev === null);
+        zUtils.assert(tail.getComponent(LinkedComponent).next === null);
+        zUtils.assert(this.entity.getId() !== tail.getId());
     }
 }
